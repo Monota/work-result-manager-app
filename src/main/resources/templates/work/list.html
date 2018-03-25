@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="layout">
+<head>
+<meta charset="UTF-8" />
+<title>成果一覧</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
+<body>
+	<div class="container">
+		<row th:if="${ErrorMessage} != null">
+			<p class="text-danger col-4 mt-5 ml-5">入力エラーがあります。<br>画面から正しい値を入力してください。</p>
+		</row>
+		<row>
+			<input type="button" class="btn btn-success col-4 m-5" value="追加" onlick="showFormCreate();" />
+		</row>
+		<row th:unless="${#lists.isEmpty(workItems)}">
+			<table class="table table-sm table-hover">
+				<thead>
+					<tr>
+						<th>日付</th>
+						<th>種類</th>
+						<th>新品</th>
+						<th>単価</th>
+						<th>数量</th>
+						<th>小計</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="wi : ${workItems}">
+						<td class="align-middle" th:text="${#dates.format(wi.workDate,'yyyy-MM-dd')}">2018-04-01</td>
+						<td class="align-middle" th:text="${{wi.itemTypeName}}">テスト1</td>
+						<td class="align-middle" th:text="${{wi.itemIsNew}} ? '○' : ''">○</td>
+						<td class="align-middle" th:text="${{wi.itemUnitPrice}}">3.0</td>
+						<td class="align-middle" th:text="${{wi.itemQuantity}}">2</td>
+						<td class="align-middle" th:text="${{wi.itemUnitPrice}} * ${{wi.itemQuantity}}">6.0</td>
+					</tr>
+				</tbody>
+			</table>
+		</row>
+	</div>
+	<div id="editModal" class="modal" tabindex="-1" role="dialog" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">編集</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<form id="editForm" class="form-horizontal" method="POST" action="/work/list/save" th:action="@{/work/list/save}" th:object="${workItemForm}">
+						<div class="form-group row">
+							<label for="workDate" class="col-2 col-form-label">日付</label>
+							<div class="col-10">
+								<input type="text" class="form-control" id="workDate" th:field="*{workDate}" readonly="readonly" />
+							</div>
+						</div>
+						<div class="form-group row">
+							<label for="itemTypeName" class="col-2 col-form-label">種類</label>
+							<div class="col-10">
+								<input type="text" class="form-control" id="itemTypeName" th:field="*{itemTypeName}" readonly="readonly" />
+							</div>
+						</div>
+						<div class="form-group row">
+							<label for="itemIsNew" class="col-2 col-form-label">新品</label>
+							<div class="col-10">
+								<input type="text" class="form-control" id="itemIsNew" th:field="*{itemIsNew}" readonly="readonly" />
+							</div>
+						</div>
+						<div class="form-group row">
+							<label for="itemUnitPrice" class="col-2 col-form-label">単価</label>
+							<div class="col-10">
+								<input type="text" class="form-control" id="itemUnitPrice" th:field="*{itemUnitPrice}" readonly="readonly" />
+							</div>
+						</div>
+						<div class="form-group row">
+							<label for="itemQuantity" class="col-2 col-form-label">数量</label>
+							<div class="col-10">
+								<input type="text" class="form-control" id="itemQuantity" th:field="*{itemQuantity}" />
+							</div>
+						</div>
+						<input type="hidden" id="mode" th:field="*{mode}" />
+					</form>
+				</div>
+				<div class="modal-footer">
+					<div class="col-6">
+						<button type="button" class="btn btn-danger" onclick="submitFormDelete();">削除</button>
+					</div>
+					<div class="col-6 text-right">
+						<button type="button" class="btn btn-primary mr-3" onclick="submitFormEdit();">保存</button>
+						<button type="button" class="btn btn-secondary" data-dismiss="modal">閉じる</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<script>
+$('tr').on('dblclick', function() {
+	$('#workDate').attr('readonly',true);
+	$('#itemTypeName').attr('readonly',true);
+	$('#itemIsNew').attr('readonly',true);
+	$('#itemUnitPrice').attr('readonly',true);
+	$('#itemTypeName').val($(this).find('td,th').eq(1).text());
+	$('#itemIsNew').val($(this).find('td,th').eq(2).text());
+	$('#itemUnitPrice').val($(this).find('td,th').eq(3).text());
+	$('#itemQuantity').val($(this).find('td,th').eq(4).text());
+	$('#editModal').modal('show');
+});
+function showFormCreate() {
+	$('#workDate').attr('readonly', false);
+	$('#itemTypeName').attr('readonly', false);
+	$('#itemIsNew').attr('readonly', false);
+	$('#itemUnitPrice').attr('readonly', false);
+	$('#itemTypeName').val($(this).find('td,th').eq(1).text());
+	$('#itemIsNew').val($(this).find('td,th').eq(2).text());
+	$('#itemUnitPrice').val($(this).find('td,th').eq(3).text());
+	$('#itemQuantity').val($(this).find('td,th').eq(4).text());
+	$('#editModal').modal('show');
+}
+function submitFormEdit() {
+	$('#mode').val('edit');
+	$('#editForm').submit();
+}
+function submitFormDelete() {
+	$('#mode').val('del');
+	$('#editForm').submit();
+}
+</script>
+</body>
+</html>
