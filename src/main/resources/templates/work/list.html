@@ -2,16 +2,21 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="layout">
 <head>
 <meta charset="UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
 <meta th:name="_csrf" th:content="${_csrf.token}"/>
 <title>成果一覧</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.1/semantic.min.css" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.1/semantic.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>
+<script src="/js/jquery.hammer.js" th:src="@{/js/jquery.hammer.js}"></script>
 <script th:inline="javascript">
 $(document).ready(function(){
-	$('tr').on('dblclick', function() {
+	$('tr').on('dblclick', function(event) {
 		$('#createButton').hide();
 		$('#editButton').show();
+		$('#deleteButton').show();
 		$('#workDate').prop('readonly', true);
 		$('#itemTypeName').prop('readonly', true);
 		$('#itemIsNew').prop('readonly', true);
@@ -27,9 +32,31 @@ $(document).ready(function(){
 		$('#itemQuantity').val($(this).find('td,th').eq(4).text());
 		$('.ui.modal').modal('show');
 	});
-	$('#newItemButton').on('click', function() {
+	$('tr').on('touchend', function(event) {
+		e.preventDefault();
+	}).hammer().bind('doubletap', function(event) {
+		$('#createButton').hide();
+		$('#editButton').show();
+		$('#deleteButton').show();
+		$('#workDate').prop('readonly', true);
+		$('#itemTypeName').prop('readonly', true);
+		$('#itemIsNew').prop('readonly', true);
+		$('#itemUnitPrice').prop('readonly', true);
+		$('#workDate').val($(this).find('td,th').eq(0).text());
+		$('#itemTypeName').val($(this).find('td,th').eq(1).text());
+		if ($(this).find('td,th').eq(2).text() == "○") {
+			$('#itemIsNew').prop("checked", true);
+		} else {
+			$('#itemIsNew').prop("checked", false);
+		}
+		$('#itemUnitPrice').val($(this).find('td,th').eq(3).text());
+		$('#itemQuantity').val($(this).find('td,th').eq(4).text());
+		$('.ui.modal').modal('show');
+	});
+	$('#newItemButton').on('click', function(event) {
 		$('#createButton').show();
 		$('#editButton').hide();
+		$('#deleteButton').hide();
 		$('#workDate').prop('readonly', false);
 		$('#itemTypeName').prop('readonly', false);
 		$('#itemIsNew').prop('readonly', false);
@@ -41,42 +68,34 @@ $(document).ready(function(){
 		$('#itemQuantity').val('');
 		$('.ui.modal').modal('show');
 	});
-	$('tr > td > button').on('click', function() {
-		var row = this.parentNode.parentNode;
-		var workDate = $(row).find('td').eq(0).text();
-		var itemTypeName = $(row).find('td').eq(1).text();
-		var itemIsNew = $(row).find('td').eq(2).text() == "○";
-		var itemUnitPrice = $(row).find('td').eq(3).text();
-		var itemQuantity = $(row).find('td').eq(4).text();
-		var token = $("meta[name='_csrf']").attr("content");
-		var postForm = $('<form/>', {'action': '/work/list/save', 'method': 'post'});
-		postForm.append($('<input/>', {'type': 'hidden', 'name': 'workDate', 'value': workDate}));
-		postForm.append($('<input/>', {'type': 'hidden', 'name': 'itemTypeName', 'value': itemTypeName}));
-		postForm.append($('<input/>', {'type': 'hidden', 'name': 'itemIsNew', 'value': itemIsNew}));
-		postForm.append($('<input/>', {'type': 'hidden', 'name': 'itemUnitPrice', 'value': itemUnitPrice}));
-		postForm.append($('<input/>', {'type': 'hidden', 'name': 'itemQuantity', 'value': itemQuantity}));
-		postForm.append($('<input/>', {'type': 'hidden', 'name': 'mode', 'value': 'del'}));
-		postForm.append($('<input/>', {'type': 'hidden', 'name': '_csrf', 'value': token}));
-		postForm.appendTo(document.body);
-		postForm.submit();
+	$('#createButton').on('click', function(event) {
+		$('#mode').val('new');
+		$('#editForm').submit();
+	});
+	$('#editButton').on('click', function(event) {
+		$('#mode').val('edit');
+		$('#editForm').submit();
+	});
+	$('#deleteButton').on('click', function(event) {
+		$('#mode').val('del');
+		$('#editForm').submit();
 	});
 });
-function submitFormEdit() {
-	$('#mode').val('edit');
-	$('#editForm').submit();
-}
-function submitFormDelete() {
-	$('#mode').val('del');
-	$('#editForm').submit();
-}
-function submitFormCreate() {
-	$('#mode').val('new');
-	$('#editForm').submit();
-}
 </script>
 <style>
 .container {
 	margin-top: 30px;
+}
+.left-aligned {
+	width: 50%;
+	float: left;
+	margin: 0;
+	text-align: left;
+}
+.right-aligned {
+	width: 50%;
+	float: right;
+	margin: 0;
 }
 </style>
 </head>
@@ -100,7 +119,7 @@ function submitFormCreate() {
 	</div>
 	<div class="ui container">
 		<row th:unless="${#lists.isEmpty(workItems)}">
-			<table class="ui celled table">
+			<table class="ui celled unstackable table">
 				<thead>
 					<tr>
 						<th>日付</th>
@@ -109,7 +128,6 @@ function submitFormCreate() {
 						<th>単価</th>
 						<th>数量</th>
 						<th>小計</th>
-						<th>&nbsp;</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -120,14 +138,13 @@ function submitFormCreate() {
 						<td th:text="${{wi.itemUnitPrice}}">3.0</td>
 						<td th:text="${{wi.itemQuantity}}">2</td>
 						<td th:text="${{wi.itemUnitPrice}} * ${{wi.itemQuantity}}">6.0</td>
-						<td><button class="tiny negative ui basic button"><i class="delete icon"></i>削除</button></td>
 					</tr>
 				</tbody>
 			</table>
 		</row>
 	</div>
 	</div>
-	<div class="ui modal">
+	<div class="ui tiny modal">
 		<i class="close icon"></i>
 		<div class="header">編集</div>
 		<div class="content">
@@ -143,7 +160,8 @@ function submitFormCreate() {
 				<div class="field">
 					<label for="itemIsNew">新品</label>
 					<div class="ui toggle checkbox">
-						<input tabindex="0" class="hidden" type="checkbox" id="itemIsNew" th:field="*{itemIsNew}" readonly="readonly">
+						<input type="checkbox" id="itemIsNew" th:field="*{itemIsNew}" readonly="readonly">
+						<label>&nbsp;</label>
 					</div>
 				</div>
 				<div class="field">
@@ -158,9 +176,15 @@ function submitFormCreate() {
 			</form>
 		</div>
 		<div class="actions">
-			<div class="ui positive button" id="createButton">作成</div>
-			<div class="ui primary button" id="editButton">更新</div>
-			<div class="ui cancel button">閉じる</div>
+			<div class="left-aligned">
+				<div class="ui negative delete button" id="deleteButton"><i class="delete icon"></i>削除</div>
+			</div>
+			<div class="right-aligned">
+				<div class="ui positive create button" id="createButton"><i class="edit icon"></i>作成</div>
+				<div class="ui primary edit button" id="editButton"><i class="pencil alternate icon"></i>更新</div>
+				<div class="ui cancel button">閉じる</div>
+			</div>
+			<div style="clear:both;"></div>
 		</div>
 	</div>
 </body>
