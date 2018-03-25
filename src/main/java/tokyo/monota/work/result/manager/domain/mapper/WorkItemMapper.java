@@ -3,6 +3,7 @@ package tokyo.monota.work.result.manager.domain.mapper;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
@@ -25,4 +26,11 @@ public interface WorkItemMapper {
 
 	@Update("UPDATE work_item SET item_quantity = #{itemQuantity} WHERE user_id = #{userId} AND work_date = #{workDate} AND item_type_name = #{itemTypeName} AND item_is_new = #{itemIsNew}")
 	public int updateWorkItem(WorkItemEntity entity);
+
+	@Delete("DELETE FROM work_item WHERE user_id = #{userId} AND work_date = #{workDate} AND item_type_name = #{itemTypeName} AND item_is_new = #{itemIsNew}")
+	public int deleteWorkItem(
+			@Param("userId") String userId,
+			@Param("workDate") Date workDate,
+			@Param("itemTypeName") String itemTypeName,
+			@Param("itemIsNew") Boolean itemIsNew);
 }
