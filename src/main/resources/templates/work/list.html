@@ -7,11 +7,14 @@
 </head>
 <body>
 	<div class="container">
+		<row th:if="${Message} != null">
+			<p class="text-primary col-4 mt-5 ml-5">完了しました。</p>
+		</row>
 		<row th:if="${ErrorMessage} != null">
 			<p class="text-danger col-4 mt-5 ml-5">入力エラーがあります。<br>画面から正しい値を入力してください。</p>
 		</row>
 		<row>
-			<input type="button" class="btn btn-success col-4 m-5" value="追加" onlick="showFormCreate();" />
+			<input type="button" class="btn btn-success col-4 m-5" value="追加" onclick="showFormCreate();" />
 		</row>
 		<row th:unless="${#lists.isEmpty(workItems)}">
 			<table class="table table-sm table-hover">
@@ -84,10 +87,11 @@
 				</div>
 				<div class="modal-footer">
 					<div class="col-6">
-						<button type="button" class="btn btn-danger" onclick="submitFormDelete();">削除</button>
+						<button id="deleteButton" type="button" class="btn btn-danger" onclick="submitFormDelete();">削除</button>
 					</div>
 					<div class="col-6 text-right">
-						<button type="button" class="btn btn-primary mr-3" onclick="submitFormEdit();">保存</button>
+						<button id="createButton" type="button" class="btn btn-success mr-3" onclick="submitFormCreate();">作成</button>
+						<button id="editButton" type="button" class="btn btn-primary mr-3" onclick="submitFormEdit();">更新</button>
 						<button type="button" class="btn btn-secondary" data-dismiss="modal">閉じる</button>
 					</div>
 				</div>
@@ -99,10 +103,14 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 <script>
 $('tr').on('dblclick', function() {
+	$('#createButton').hide();
+	$('#editButton').show();
+	$('#deleteButton').show();
 	$('#workDate').attr('readonly',true);
 	$('#itemTypeName').attr('readonly',true);
 	$('#itemIsNew').attr('readonly',true);
 	$('#itemUnitPrice').attr('readonly',true);
+	$('#workDate').val($(this).find('td,th').eq(0).text());
 	$('#itemTypeName').val($(this).find('td,th').eq(1).text());
 	$('#itemIsNew').val($(this).find('td,th').eq(2).text());
 	$('#itemUnitPrice').val($(this).find('td,th').eq(3).text());
@@ -110,14 +118,17 @@ $('tr').on('dblclick', function() {
 	$('#editModal').modal('show');
 });
 function showFormCreate() {
+	$('#createButton').show();
+	$('#editButton').hide();
+	$('#deleteButton').hide();
 	$('#workDate').attr('readonly', false);
 	$('#itemTypeName').attr('readonly', false);
 	$('#itemIsNew').attr('readonly', false);
 	$('#itemUnitPrice').attr('readonly', false);
-	$('#itemTypeName').val($(this).find('td,th').eq(1).text());
-	$('#itemIsNew').val($(this).find('td,th').eq(2).text());
-	$('#itemUnitPrice').val($(this).find('td,th').eq(3).text());
-	$('#itemQuantity').val($(this).find('td,th').eq(4).text());
+	$('#itemTypeName').val('');
+	$('#itemIsNew').val('');
+	$('#itemUnitPrice').val('');
+	$('#itemQuantity').val('');
 	$('#editModal').modal('show');
 }
 function submitFormEdit() {
@@ -126,6 +137,10 @@ function submitFormEdit() {
 }
 function submitFormDelete() {
 	$('#mode').val('del');
+	$('#editForm').submit();
+}
+function submitFormCreate() {
+	$('#mode').val('new');
 	$('#editForm').submit();
 }
 </script>
