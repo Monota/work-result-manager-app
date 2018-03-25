@@ -7,80 +7,111 @@
 <meta th:name="_csrf" th:content="${_csrf.token}"/>
 <title>成果一覧</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.1/semantic.min.css" />
+<link rel="stylesheet" href="/css/calendar.min.css" th:href="@{/css/calendar.min.css}" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.1/semantic.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>
 <script src="/js/jquery.hammer.js" th:src="@{/js/jquery.hammer.js}"></script>
+<script src="/js/calendar.min.js" th:src="@{/js/calendar.min.js}"></script>
 <script th:inline="javascript">
 $(document).ready(function(){
 	$('tr').on('dblclick', function(event) {
-		$('#createButton').hide();
-		$('#editButton').show();
-		$('#deleteButton').show();
-		$('#workDate').prop('readonly', true);
-		$('#itemTypeName').prop('readonly', true);
-		$('#itemIsNew').prop('readonly', true);
-		$('#itemUnitPrice').prop('readonly', true);
-		$('#workDate').val($(this).find('td,th').eq(0).text());
-		$('#itemTypeName').val($(this).find('td,th').eq(1).text());
-		if ($(this).find('td,th').eq(2).text() == "○") {
-			$('#itemIsNew').prop("checked", true);
-		} else {
-			$('#itemIsNew').prop("checked", false);
-		}
-		$('#itemUnitPrice').val($(this).find('td,th').eq(3).text());
-		$('#itemQuantity').val($(this).find('td,th').eq(4).text());
-		$('.ui.modal').modal('show');
+		showEditModal(this);
 	});
 	$('tr').on('touchend', function(event) {
 		e.preventDefault();
 	}).hammer().bind('doubletap', function(event) {
-		$('#createButton').hide();
-		$('#editButton').show();
-		$('#deleteButton').show();
-		$('#workDate').prop('readonly', true);
-		$('#itemTypeName').prop('readonly', true);
-		$('#itemIsNew').prop('readonly', true);
-		$('#itemUnitPrice').prop('readonly', true);
-		$('#workDate').val($(this).find('td,th').eq(0).text());
-		$('#itemTypeName').val($(this).find('td,th').eq(1).text());
-		if ($(this).find('td,th').eq(2).text() == "○") {
-			$('#itemIsNew').prop("checked", true);
-		} else {
-			$('#itemIsNew').prop("checked", false);
-		}
-		$('#itemUnitPrice').val($(this).find('td,th').eq(3).text());
-		$('#itemQuantity').val($(this).find('td,th').eq(4).text());
-		$('.ui.modal').modal('show');
+		showEditModal(this);
 	});
 	$('#newItemButton').on('click', function(event) {
-		$('#createButton').show();
-		$('#editButton').hide();
-		$('#deleteButton').hide();
-		$('#workDate').prop('readonly', false);
-		$('#itemTypeName').prop('readonly', false);
-		$('#itemIsNew').prop('readonly', false);
-		$('#itemUnitPrice').prop('readonly', false);
-		$('#workDate').val('');
-		$('#itemTypeName').val('');
-		$('#itemIsNew').prop("checked", false);
-		$('#itemUnitPrice').val('');
-		$('#itemQuantity').val('');
-		$('.ui.modal').modal('show');
+		showCreateModal();
 	});
 	$('#createButton').on('click', function(event) {
+		$('#itemIsNewHidden').val($("#itemIsNew").val());
 		$('#mode').val('new');
 		$('#editForm').submit();
 	});
 	$('#editButton').on('click', function(event) {
+		$('#itemIsNewHidden').val($("#itemIsNew").val());
 		$('#mode').val('edit');
 		$('#editForm').submit();
 	});
 	$('#deleteButton').on('click', function(event) {
+		$('#itemIsNewHidden').val($("#itemIsNew").val());
 		$('#mode').val('del');
 		$('#editForm').submit();
 	});
 });
+function showCreateModal() {
+	$('#createButton').show();
+	$('#editButton').hide();
+	$('#deleteButton').hide();
+	$('.ui.calendar').removeClass("disabled");
+	$('.ui.dropdown').removeClass("disabled");
+	$('.ui.toggle.checkbox').removeClass("disabled");
+	$('#itemIsNew').prop('disabled', false);
+	$('#itemUnitPrice').prop('readonly', true);
+	$('#itemUnitPrice').addClass("disabled");
+	$('#workDate').val('');
+	$('#itemTypeName').val('');
+	$('#itemIsNew').prop("checked", false);
+	$('#itemUnitPrice').val('');
+	$('#itemQuantity').val('');
+	$('.ui.modal').modal({
+		onShow: function() {
+			$('.ui.calendar').calendar({
+				type: 'date',
+				on: 'click',
+				formatter: {
+					date: function(date, settings) {
+						if (!date) return '';
+						var day = ("0" + date.getDate()).slice(-2);
+						var month = ("0" + (date.getMonth() + 1)).slice(-2);
+						var year = date.getFullYear();
+						return year + '-' + month + '-' + day;
+					}
+				}
+			});
+		}
+	}).modal('show');
+}
+function showEditModal(row) {
+	$('#createButton').hide();
+	$('#editButton').show();
+	$('#deleteButton').show();
+	$('.ui.calendar').addClass("disabled");
+	$('.ui.dropdown').addClass("disabled");
+	$('.ui.toggle.checkbox').addClass("disabled");
+	$('#itemIsNew').prop('disabled', true);
+	$('#itemUnitPrice').prop('readonly', true);
+	$('#itemUnitPrice').addClass("disabled");
+	$('#workDate').val($(row).find('td').eq(0).text());
+	$('#itemTypeName').val($(row).find('td').eq(1).text());
+	if ($(row).find('td').eq(2).text() == "○") {
+		$('#itemIsNew').prop("checked", true);
+	} else {
+		$('#itemIsNew').prop("checked", false);
+	}
+	$('#itemUnitPrice').val($(row).find('td').eq(3).text());
+	$('#itemQuantity').val($(row).find('td').eq(4).text());
+	$('.ui.modal').modal({
+		onShow: function() {
+			$('.ui.calendar').calendar({
+				type: 'date',
+				on: 'click',
+				formatter: {
+					date: function(date, settings) {
+						if (!date) return '';
+						var day = ("0" + date.getDate()).slice(-2);
+						var month = ("0" + (date.getMonth() + 1)).slice(-2);
+						var year = date.getFullYear();
+						return year + '-' + month + '-' + day;
+					}
+				}
+			});
+		}
+	}).modal('show');
+}
 </script>
 <style>
 .container {
@@ -119,7 +150,7 @@ $(document).ready(function(){
 	</div>
 	<div class="ui container">
 		<row th:unless="${#lists.isEmpty(workItems)}">
-			<table class="ui celled unstackable table">
+			<table class="ui selectable celled unstackable table">
 				<thead>
 					<tr>
 						<th>日付</th>
@@ -151,27 +182,33 @@ $(document).ready(function(){
 			<form id="editForm" class="ui form" method="POST" action="/work/list/save" th:action="@{/work/list/save}" th:object="${workItemForm}">
 				<div class="field">
 					<label for="workDate">日付</label>
-					<input type="text" class="ui input" id="workDate" th:field="*{workDate}" readonly="readonly" />
+					<div class="ui calendar input left icon">
+						<i class="calendar icon"></i>
+						<input type="text" id="workDate" th:field="*{workDate}" />
+					</div>
 				</div>
 				<div class="field">
 					<label for="itemTypeName">種類</label>
-					<input type="text" class="ui input" id="itemTypeName" th:field="*{itemTypeName}" readonly="readonly" />
+					<select class="ui dropdown" th:field="*{itemTypeName}">
+						<option th:each="type : ${itemTypeNames}" th:value="${type}" th:text="${type}"></option>
+					</select>
 				</div>
 				<div class="field">
 					<label for="itemIsNew">新品</label>
 					<div class="ui toggle checkbox">
-						<input type="checkbox" id="itemIsNew" th:field="*{itemIsNew}" readonly="readonly">
+						<input type="checkbox" id="itemIsNew" th:field="*{itemIsNew}" />
 						<label>&nbsp;</label>
 					</div>
 				</div>
 				<div class="field">
 					<label for="itemUnitPrice">単価</label>
-					<input type="text" class="ui input" id="itemUnitPrice" th:field="*{itemUnitPrice}" readonly="readonly" />
+					<input type="text" class="ui input" id="itemUnitPrice" th:field="*{itemUnitPrice}" />
 				</div>
 				<div class="field">
 					<label for="itemQuantity">数量</label>
 					<input type="text" class="ui input" id="itemQuantity" th:field="*{itemQuantity}" />
 				</div>
+				<input type="hidden" id="itemIsNewHidden" th:field="*{itemIsNew}" />
 				<input type="hidden" id="mode" th:field="*{mode}" />
 			</form>
 		</div>

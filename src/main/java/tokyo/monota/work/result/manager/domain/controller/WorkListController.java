@@ -35,7 +35,9 @@ public class WorkListController {
 	@GetMapping("/list")
 	public String index(Model model) {
 		List<WorkResource> workResourceList = workService.getAllWorkItem();
+		List<String> itemTypeNames = workService.getAllItemTypeNames();
 		model.addAttribute("workItems", workResourceList);
+		model.addAttribute("itemTypeNames", itemTypeNames);
 		return "/work/list";
 	}
 

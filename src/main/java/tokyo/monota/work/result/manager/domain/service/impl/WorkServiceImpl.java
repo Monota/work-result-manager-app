@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import tokyo.monota.work.result.manager.domain.entity.WorkItemEntity;
+import tokyo.monota.work.result.manager.domain.mapper.ItemMasterMapper;
 import tokyo.monota.work.result.manager.domain.mapper.WorkItemMapper;
 import tokyo.monota.work.result.manager.domain.resource.WorkResource;
 import tokyo.monota.work.result.manager.domain.service.WorkService;
@@ -18,6 +19,9 @@ public class WorkServiceImpl implements WorkService {
 
 	@Autowired
 	WorkItemMapper workItemMapper;
+
+	@Autowired
+	ItemMasterMapper itemMasterMapper;
 
 	@Override
 	public List<WorkResource> getAllWorkItem() {
@@ -32,6 +36,12 @@ public class WorkServiceImpl implements WorkService {
 		}
 
 		return workResourceList;
+	}
+
+	@Override
+	public List<String> getAllItemTypeNames() {
+
+		return itemMasterMapper.selectAllItemTypeNames();
 	}
 
 	@Override

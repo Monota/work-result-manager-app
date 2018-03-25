@@ -8,6 +8,8 @@ public interface WorkService {
 
 	public List<WorkResource> getAllWorkItem();
 
+	public List<String> getAllItemTypeNames();
+
 	public void updateWorkItem(WorkResource resource);
 
 	public void deleteWorkItem(WorkResource resource);
