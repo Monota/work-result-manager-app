@@ -15,8 +15,7 @@ public class WorkItemForm {
 	private String itemTypeName;
 
 	@NotNull
-	@Pattern(regexp = "|○")
-	private String itemIsNew;
+	private Boolean itemIsNew;
 
 	@NotNull
 	private BigDecimal itemUnitPrice;
@@ -44,11 +43,11 @@ public class WorkItemForm {
 		this.itemTypeName = itemTypeName;
 	}
 
-	public String getItemIsNew() {
+	public Boolean getItemIsNew() {
 		return itemIsNew;
 	}
 
-	public void setItemIsNew(String itemIsNew) {
+	public void setItemIsNew(Boolean itemIsNew) {
 		this.itemIsNew = itemIsNew;
 	}
 

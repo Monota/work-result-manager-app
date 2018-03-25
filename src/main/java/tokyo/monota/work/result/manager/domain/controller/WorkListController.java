@@ -92,7 +92,7 @@ public class WorkListController {
 		Date workDate = new SimpleDateFormat("yyyy-MM-dd").parse(form.getWorkDate());
 		resource.setWorkDate(workDate);
 		resource.setItemTypeName(form.getItemTypeName());
-		resource.setItemIsNew(form.getItemIsNew().equals("○"));
+		resource.setItemIsNew(form.getItemIsNew());
 		resource.setItemUnitPrice(form.getItemUnitPrice());
 		resource.setItemQuantity(Integer.parseInt(form.getItemQuantity()));
 		workService.deleteWorkItem(resource);
