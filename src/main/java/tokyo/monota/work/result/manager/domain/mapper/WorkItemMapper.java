@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Delete;
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
@@ -33,4 +34,7 @@ public interface WorkItemMapper {
 			@Param("workDate") Date workDate,
 			@Param("itemTypeName") String itemTypeName,
 			@Param("itemIsNew") Boolean itemIsNew);
+
+	@Insert("INSERT INTO work_item VALUES(#{userId}, #{workDate}, #{itemTypeName}, #{itemIsNew}, #{itemUnitPrice}, #{itemQuantity})")
+	public int insertWorkItem(WorkItemEntity entity);
 }

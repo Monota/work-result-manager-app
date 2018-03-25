@@ -55,16 +55,50 @@ public class WorkListController {
 		resource.setItemQuantity(Integer.parseInt(form.getItemQuantity()));
 		workService.updateWorkItem(resource);
 
+		redirectAttributes.addFlashAttribute("Message", "Updated.");
+
 		return "redirect:/work/list";
 	}
 
 	@PostMapping(value = "/list/save", params = "mode=new")
 	public String create(@Valid WorkItemForm form, BindingResult bindingResult, RedirectAttributes redirectAttributes) throws Exception {
+		if (bindingResult.hasErrors()) {
+			redirectAttributes.addFlashAttribute("ErrorMessage", "There are input errors.");
+			return "redirect:/work/list";
+		}
+
+		WorkResource resource = new WorkResource();
+		Date workDate = new SimpleDateFormat("yyyy-MM-dd").parse(form.getWorkDate());
+		resource.setWorkDate(workDate);
+		resource.setItemTypeName(form.getItemTypeName());
+		resource.setItemIsNew(form.getItemIsNew().equals("○"));
+		resource.setItemUnitPrice(form.getItemUnitPrice());
+		resource.setItemQuantity(Integer.parseInt(form.getItemQuantity()));
+		workService.createWorkItem(resource);
+
+		redirectAttributes.addFlashAttribute("Message", "Created.");
+
 		return "redirect:/work/list";
 	}
 
 	@PostMapping(value = "/list/save", params = "mode=del")
 	public String delete(@Valid WorkItemForm form, BindingResult bindingResult, RedirectAttributes redirectAttributes) throws Exception {
+		if (bindingResult.hasErrors()) {
+			redirectAttributes.addFlashAttribute("ErrorMessage", "There are input errors.");
+			return "redirect:/work/list";
+		}
+
+		WorkResource resource = new WorkResource();
+		Date workDate = new SimpleDateFormat("yyyy-MM-dd").parse(form.getWorkDate());
+		resource.setWorkDate(workDate);
+		resource.setItemTypeName(form.getItemTypeName());
+		resource.setItemIsNew(form.getItemIsNew().equals("○"));
+		resource.setItemUnitPrice(form.getItemUnitPrice());
+		resource.setItemQuantity(Integer.parseInt(form.getItemQuantity()));
+		workService.deleteWorkItem(resource);
+
+		redirectAttributes.addFlashAttribute("Message", "Deleted.");
+
 		return "redirect:/work/list";
 	}
 }

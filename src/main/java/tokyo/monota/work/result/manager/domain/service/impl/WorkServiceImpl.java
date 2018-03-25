@@ -47,4 +47,23 @@ public class WorkServiceImpl implements WorkService {
 		entity.setItemQuantity(resource.getItemQuantity());
 		workItemMapper.updateWorkItem(entity);
 	}
+
+	@Override
+	public void deleteWorkItem(WorkResource resource) {
+
+		workItemMapper.deleteWorkItem("user", resource.getWorkDate(), resource.getItemTypeName(), resource.getItemIsNew());
+	}
+
+	@Override
+	public void createWorkItem(WorkResource resource) {
+
+		WorkItemEntity entity = new WorkItemEntity();
+		entity.setUserId("user");
+		entity.setWorkDate(resource.getWorkDate());
+		entity.setItemIsNew(resource.getItemIsNew());
+		entity.setItemTypeName(resource.getItemTypeName());
+		entity.setItemUnitPrice(resource.getItemUnitPrice());
+		entity.setItemQuantity(resource.getItemQuantity());
+		workItemMapper.insertWorkItem(entity);
+	}
 }
