@@ -12,6 +12,8 @@ public interface WorkService {
 
 	public String getItemUnitPrice(String itemTypeName, Boolean itemIsNew);
 
+	public String getTotalPrice();
+
 	public void updateWorkItem(WorkResource resource);
 
 	public void deleteWorkItem(WorkResource resource);

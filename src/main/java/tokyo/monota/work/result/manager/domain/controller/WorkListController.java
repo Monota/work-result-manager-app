@@ -40,14 +40,16 @@ public class WorkListController {
 		if (itemTypeName == null) {
 			return "";
 		}
-
 		if (itemIsNew == null) {
 			itemIsNew = Boolean.FALSE;
 		}
+		return workService.getItemUnitPrice(itemTypeName, itemIsNew);
+	}
 
-		String unitPrice = workService.getItemUnitPrice(itemTypeName, itemIsNew);
-
-		return unitPrice;
+	@ResponseBody
+	@GetMapping("/item/totalprice")
+	public String getTotalPrice() {
+		return workService.getTotalPrice();
 	}
 
 	@GetMapping("/list")

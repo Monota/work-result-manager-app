@@ -47,6 +47,7 @@ $(document).ready(function(){
 		$('#mode').val('del');
 		$('#editForm').submit();
 	});
+	setTotalPrice();
 });
 function showCreateModal() {
 	$('#createButton').show();
@@ -127,19 +128,26 @@ function setItemUnitPrice() {
 		$('#itemUnitPrice').val(data);
 	});
 }
+function setTotalPrice() {
+	url = /*[[@{/work/item/totalprice}]]*/ '/work/item/totalprice';
+	$.get(url, function(data) {
+		$('#totalPrice').text(data);
+	});
+}
 </script>
 <style>
 .container {
 	margin-top: 30px;
+	margin-bottom: 30px;
 }
 .left-aligned {
-	width: 50%;
+	width: 40%;
 	float: left;
 	margin: 0;
 	text-align: left;
 }
 .right-aligned {
-	width: 50%;
+	width: 60%;
 	float: right;
 	margin: 0;
 }
@@ -189,6 +197,13 @@ function setItemUnitPrice() {
 			</table>
 		</row>
 	</div>
+	<div class="ui text container">
+		<div class="ui icon message">
+			<i class="gift icon"></i>
+			<div class="content">
+				<p>合計は <span id="totalPrice"></span> 円</p>
+			</div>
+		</div>
 	</div>
 	<div class="ui tiny modal">
 		<i class="close icon"></i>
@@ -221,7 +236,7 @@ function setItemUnitPrice() {
 				</div>
 				<div class="field">
 					<label for="itemQuantity">数量</label>
-					<input type="text" class="ui input" id="itemQuantity" th:field="*{itemQuantity}" />
+					<input type="number" class="ui input" id="itemQuantity" th:field="*{itemQuantity}" />
 				</div>
 				<input type="hidden" id="itemIsNewHidden" th:field="*{itemIsNew}" />
 				<input type="hidden" id="mode" th:field="*{mode}" />

@@ -1,5 +1,6 @@
 package tokyo.monota.work.result.manager.domain.mapper;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -24,6 +25,10 @@ public interface WorkItemMapper {
 			@Param("workDate") Date workDate,
 			@Param("itemTypeName") String itemTypeName,
 			@Param("itemIsNew") Boolean itemIsNew);
+
+
+	@Select("SELECT SUM(item_unit_price * item_quantity) FROM work_item")
+	public BigDecimal sumupUnitPrice();
 
 	@Update("UPDATE work_item SET item_quantity = #{itemQuantity} WHERE user_id = #{userId} AND work_date = #{workDate} AND item_type_name = #{itemTypeName} AND item_is_new = #{itemIsNew}")
 	public int updateWorkItem(WorkItemEntity entity);

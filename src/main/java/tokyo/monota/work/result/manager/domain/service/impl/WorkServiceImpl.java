@@ -61,6 +61,20 @@ public class WorkServiceImpl implements WorkService {
 	}
 
 	@Override
+	public String getTotalPrice() {
+
+		BigDecimal totalPrice = workItemMapper.sumupUnitPrice();
+
+		if (totalPrice == null) {
+			return "";
+		}
+
+		totalPrice = totalPrice.setScale(2, RoundingMode.FLOOR);
+
+		return totalPrice.toString();
+	}
+
+	@Override
 	@Transactional
 	public void updateWorkItem(WorkResource resource) {
 
