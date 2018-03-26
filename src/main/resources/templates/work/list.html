@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
 <meta th:name="_csrf" th:content="${_csrf.token}"/>
-<title>成果一覧</title>
+<title>リスト</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.1/semantic.min.css" />
 <link rel="stylesheet" href="/css/calendar.min.css" th:href="@{/css/calendar.min.css}" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -23,21 +23,27 @@ $(document).ready(function(){
 	}).hammer().bind('doubletap', function(event) {
 		showEditModal(this);
 	});
+	$('#itemTypeName').change(function() {
+		setItemUnitPrice();
+	});
+	$('#itemIsNew').change(function() {
+		setItemUnitPrice();
+	});
 	$('#newItemButton').on('click', function(event) {
 		showCreateModal();
 	});
 	$('#createButton').on('click', function(event) {
-		$('#itemIsNewHidden').val($("#itemIsNew").val());
+		$('#itemIsNewHidden').val($("#itemIsNew").prop('checked'));
 		$('#mode').val('new');
 		$('#editForm').submit();
 	});
 	$('#editButton').on('click', function(event) {
-		$('#itemIsNewHidden').val($("#itemIsNew").val());
+		$('#itemIsNewHidden').val($("#itemIsNew").prop('checked'));
 		$('#mode').val('edit');
 		$('#editForm').submit();
 	});
 	$('#deleteButton').on('click', function(event) {
-		$('#itemIsNewHidden').val($("#itemIsNew").val());
+		$('#itemIsNewHidden').val($("#itemIsNew").prop('checked'));
 		$('#mode').val('del');
 		$('#editForm').submit();
 	});
@@ -111,6 +117,15 @@ function showEditModal(row) {
 			});
 		}
 	}).modal('show');
+}
+function setItemUnitPrice() {
+	var itemTypeName = $('#itemTypeName').val();
+	var itemIsNew = $('#itemIsNew').prop("checked");
+	url = /*[[@{/work/item/unitprice}]]*/ '/work/item/unitprice';
+	url = url + '?ItemTypeName=' + itemTypeName + '&ItemIsNew=' + itemIsNew;
+	$.get(url, function(data) {
+		$('#itemUnitPrice').val(data);
+	});
 }
 </script>
 <style>
@@ -189,7 +204,7 @@ function showEditModal(row) {
 				</div>
 				<div class="field">
 					<label for="itemTypeName">種類</label>
-					<select class="ui dropdown" th:field="*{itemTypeName}">
+					<select class="ui dropdown" id="itemTypeName" th:field="*{itemTypeName}">
 						<option th:each="type : ${itemTypeNames}" th:value="${type}" th:text="${type}"></option>
 					</select>
 				</div>

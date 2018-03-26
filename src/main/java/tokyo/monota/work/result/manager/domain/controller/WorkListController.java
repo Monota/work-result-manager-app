@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import tokyo.monota.work.result.manager.domain.form.WorkItemForm;
@@ -30,6 +32,22 @@ public class WorkListController {
 	@ModelAttribute
 	public WorkItemForm initForm() {
 		return new WorkItemForm();
+	}
+
+	@ResponseBody
+	@GetMapping("/item/unitprice")
+	public String getUnitPrice(@RequestParam("ItemTypeName") String itemTypeName, @RequestParam("ItemIsNew") Boolean itemIsNew) {
+		if (itemTypeName == null) {
+			return "";
+		}
+
+		if (itemIsNew == null) {
+			itemIsNew = Boolean.FALSE;
+		}
+
+		String unitPrice = workService.getItemUnitPrice(itemTypeName, itemIsNew);
+
+		return unitPrice;
 	}
 
 	@GetMapping("/list")

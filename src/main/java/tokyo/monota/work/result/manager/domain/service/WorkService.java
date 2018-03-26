@@ -10,6 +10,8 @@ public interface WorkService {
 
 	public List<String> getAllItemTypeNames();
 
+	public String getItemUnitPrice(String itemTypeName, Boolean itemIsNew);
+
 	public void updateWorkItem(WorkResource resource);
 
 	public void deleteWorkItem(WorkResource resource);

@@ -1,5 +1,7 @@
 package tokyo.monota.work.result.manager.domain.service.impl;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,6 +44,20 @@ public class WorkServiceImpl implements WorkService {
 	public List<String> getAllItemTypeNames() {
 
 		return itemMasterMapper.selectAllItemTypeNames();
+	}
+
+	@Override
+	public String getItemUnitPrice(String itemTypeName, Boolean itemIsNew) {
+
+		BigDecimal unitPrice = itemMasterMapper.selectUnitPrice(itemTypeName, itemIsNew);
+
+		if (unitPrice == null) {
+			return "";
+		}
+
+		unitPrice = unitPrice.setScale(2, RoundingMode.FLOOR);
+
+		return unitPrice.toString();
 	}
 
 	@Override
