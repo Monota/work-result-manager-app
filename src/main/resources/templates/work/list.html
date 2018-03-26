@@ -173,25 +173,25 @@ function setTotalPrice() {
 	</div>
 	<div class="ui container">
 		<row th:unless="${#lists.isEmpty(workItems)}">
-			<table class="ui selectable celled unstackable table">
+			<table class="ui selectable celled unstackable small table">
 				<thead>
 					<tr>
-						<th>日付</th>
-						<th>種類</th>
-						<th>新品</th>
-						<th>単価</th>
-						<th>数量</th>
-						<th>小計</th>
+						<th class="center aligned">日付</th>
+						<th class="center aligned">種類</th>
+						<th class="center aligned">新品</th>
+						<th class="center aligned">単価</th>
+						<th class="center aligned">数量</th>
+						<th class="center aligned">小計</th>
 					</tr>
 				</thead>
 				<tbody>
 					<tr th:each="wi : ${workItems}">
-						<td th:text="${#dates.format(wi.workDate,'yyyy-MM-dd')}">2018-04-01</td>
+						<td th:text="${#dates.format(wi.workDate,'MM/dd')}" class="center aligned">04/01</td>
 						<td th:text="${{wi.itemTypeName}}">テスト1</td>
-						<td th:text="${{wi.itemIsNew}} ? '○' : ''">○</td>
-						<td th:text="${{wi.itemUnitPrice}}">3.0</td>
-						<td th:text="${{wi.itemQuantity}}">2</td>
-						<td th:text="${{wi.itemUnitPrice}} * ${{wi.itemQuantity}}">6.0</td>
+						<td th:text="${{wi.itemIsNew}} ? '○' : ''" class="center aligned">○</td>
+						<td th:text="${{wi.itemUnitPrice}}" class="right aligned">3.0</td>
+						<td th:text="${{wi.itemQuantity}}" class="right aligned">2</td>
+						<td th:text="${{wi.itemUnitPrice}} * ${{wi.itemQuantity}}" class="right aligned">6.0</td>
 					</tr>
 				</tbody>
 			</table>
