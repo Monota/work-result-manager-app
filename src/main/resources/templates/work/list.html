@@ -47,6 +47,18 @@ $(document).ready(function(){
 		$('#mode').val('del');
 		$('#editForm').submit();
 	});
+	var url = /*[[@{/work/monthlist}]]*/ '/work/monthlist';
+	$.get(url, function(data) {
+		$('.ui.dropdown').dropdown({
+			placeholder: '月を選択',
+			values: data.values,
+			onChange: function(value, text, $selectedItem) {
+				if (text) {
+					// key : text, value : value
+				}
+			}
+		});
+	});
 	setTotalPrice();
 });
 function showCreateModal() {
@@ -122,14 +134,14 @@ function showEditModal(row) {
 function setItemUnitPrice() {
 	var itemTypeName = $('#itemTypeName').val();
 	var itemIsNew = $('#itemIsNew').prop("checked");
-	url = /*[[@{/work/item/unitprice}]]*/ '/work/item/unitprice';
+	var url = /*[[@{/work/item/unitprice}]]*/ '/work/item/unitprice';
 	url = url + '?ItemTypeName=' + itemTypeName + '&ItemIsNew=' + itemIsNew;
 	$.get(url, function(data) {
 		$('#itemUnitPrice').val(data);
 	});
 }
 function setTotalPrice() {
-	url = /*[[@{/work/item/totalprice}]]*/ '/work/item/totalprice';
+	var url = /*[[@{/work/item/totalprice}]]*/ '/work/item/totalprice';
 	$.get(url, function(data) {
 		$('#totalPrice').text(data);
 	});
@@ -155,24 +167,34 @@ function setTotalPrice() {
 </head>
 <body>
 	<div class="ui container">
-		<row th:if="${Message} != null">
+		<div class="row" th:if="${Message} != null">
 			<p class="ui positive message">完了しました。</p>
-		</row>
-		<row th:if="${ErrorMessage} != null">
+		</div>
+		<div class="row" th:if="${ErrorMessage} != null">
 			<p class="ui error message">
 				入力エラーがあります。<br>画面から正しい値を入力してください。
 			</p>
-		</row>
+		</div>
 	</div>
 	<div class="ui container">
-		<row>
-			<button class="ui labeled icon positive button" id="newItemButton">
-				<i class="edit icon"></i>追加
-			</button>
-		</row>
+		<div class="ui grid">
+			<div class="two column row">
+				<div class="left floated column">
+					<button class="ui labeled icon positive left-aligned button" id="newItemButton">
+						<i class="edit icon"></i>追加
+					</button>
+				</div>
+				<div class="right floated column">
+					<div class="ui selection dropdown right-aligned">
+						<div class="text"></div>
+						<i class="dropdown icon"></i>
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
 	<div class="ui container">
-		<row th:unless="${#lists.isEmpty(workItems)}">
+		<div class="row" th:unless="${#lists.isEmpty(workItems)}">
 			<table class="ui selectable celled unstackable small table">
 				<thead>
 					<tr>
@@ -195,7 +217,7 @@ function setTotalPrice() {
 					</tr>
 				</tbody>
 			</table>
-		</row>
+		</div>
 	</div>
 	<div class="ui text container">
 		<div class="ui icon message">

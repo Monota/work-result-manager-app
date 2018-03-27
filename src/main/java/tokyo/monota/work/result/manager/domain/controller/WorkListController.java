@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import tokyo.monota.work.result.manager.domain.form.WorkItemForm;
+import tokyo.monota.work.result.manager.domain.resource.MonthListResource;
+import tokyo.monota.work.result.manager.domain.resource.MonthSelectionResource;
 import tokyo.monota.work.result.manager.domain.resource.WorkResource;
 import tokyo.monota.work.result.manager.domain.service.WorkService;
 
@@ -50,6 +52,15 @@ public class WorkListController {
 	@GetMapping("/item/totalprice")
 	public String getTotalPrice() {
 		return workService.getTotalPrice();
+	}
+
+	@ResponseBody
+	@GetMapping("/monthlist")
+	public MonthListResource getMonthList() {
+		MonthListResource monthList = new MonthListResource();
+		monthList.addValue(new MonthSelectionResource("name1", "value1"));
+		monthList.addValue(new MonthSelectionResource("name2", "value2"));
+		return monthList;
 	}
 
 	@GetMapping("/list")
