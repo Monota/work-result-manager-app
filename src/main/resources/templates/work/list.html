@@ -14,6 +14,7 @@
 <script src="/js/jquery.hammer.js" th:src="@{/js/jquery.hammer.js}"></script>
 <script src="/js/calendar.min.js" th:src="@{/js/calendar.min.js}"></script>
 <script th:inline="javascript">
+currentWorkMonth = /*[[${currentWorkMonth}]]*/ '2018/03';
 $(document).ready(function(){
 	$('tr').on('dblclick', function(event) {
 		showEditModal(this);
@@ -48,12 +49,12 @@ $(document).ready(function(){
 		$('#editForm').submit();
 	});
 	var url = /*[[@{/work/monthlist}]]*/ '/work/monthlist';
-	$.get(url, function(data) {
+	$.get(url + '?month=' + currentWorkMonth, function(data) {
 		$('#monthSelector').dropdown({
 			placeholder: '月を選択',
 			values: data.values,
 			onChange: function(value, text, $selectedItem) {
-				if (text && value) {
+				if (text && value && currentWorkMonth != value) {
 					var urlOnChange = /*[[@{/work/list}]]*/ '/work/list';
 					urlOnChange = urlOnChange + '?month=' + value;
 					window.location.href = urlOnChange;

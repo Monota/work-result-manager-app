@@ -6,9 +6,12 @@ public class MonthSelectionResource {
 
 	private String value;
 
-	public MonthSelectionResource(String name, String value) {
+	private boolean selected;
+
+	public MonthSelectionResource(String name, String value, boolean selected) {
 		this.name = name;
 		this.value = value;
+		this.selected = selected;
 	}
 
 	public String getName() {
@@ -17,5 +20,9 @@ public class MonthSelectionResource {
 
 	public String getValue() {
 		return value;
+	}
+
+	public boolean isSelected() {
+		return selected;
 	}
 }

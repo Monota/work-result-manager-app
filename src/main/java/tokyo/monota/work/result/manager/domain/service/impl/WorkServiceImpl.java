@@ -28,9 +28,9 @@ public class WorkServiceImpl implements WorkService {
 	ItemMasterMapper itemMasterMapper;
 
 	@Override
-	public List<WorkResource> getWorkItemByWorkMonth(String workMonth) {
+	public List<WorkResource> getWorkItemByWorkMonth(String currentWorkMonth) {
 
-		List<WorkItemEntity> workItemEntityList = workItemMapper.selectWorkItemsByWorkMonth(workMonth);
+		List<WorkItemEntity> workItemEntityList = workItemMapper.selectWorkItemsByWorkMonth(currentWorkMonth);
 
 		List<WorkResource> workResourceList = new ArrayList<>();
 		for (WorkItemEntity entity : workItemEntityList) {
@@ -43,13 +43,13 @@ public class WorkServiceImpl implements WorkService {
 	}
 
 	@Override
-	public MonthListResource getAllWorkMonths() {
+	public MonthListResource getAllWorkMonths(String currentWorkMonth) {
 
 		List<String> workMonthList = workItemMapper.selectWorkMonths();
 
 		MonthListResource monthList = new MonthListResource();
 		for (String workMonth : workMonthList) {
-			monthList.addValue(new MonthSelectionResource(workMonth, workMonth));
+			monthList.addValue(new MonthSelectionResource(workMonth, workMonth, workMonth.equals(currentWorkMonth)));
 		}
 
 		return monthList;

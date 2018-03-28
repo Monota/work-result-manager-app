@@ -54,18 +54,19 @@ public class WorkListController {
 	}
 
 	@ResponseBody
-	@GetMapping("/monthlist")
-	public MonthListResource getMonthList() {
-		return workService.getAllWorkMonths();
+	@GetMapping(value = "/monthlist", params = "month")
+	public MonthListResource getMonthList(@RequestParam("month") String workMonth) {
+		return workService.getAllWorkMonths(workMonth);
 	}
 
 	@GetMapping("/list")
 	public String list(Model model) throws Exception {
-		String currentMonth = new SimpleDateFormat("yyyy/MM/DD").format(new Date());
+		String currentMonth = new SimpleDateFormat("yyyy/MM").format(new Date());
 		List<WorkResource> workResourceList = workService.getWorkItemByWorkMonth(currentMonth);
 		List<String> itemTypeNames = workService.getAllItemTypeNames();
 		model.addAttribute("workItems", workResourceList);
 		model.addAttribute("itemTypeNames", itemTypeNames);
+		model.addAttribute("currentWorkMonth", currentMonth);
 		return "/work/list";
 	}
 
@@ -75,6 +76,7 @@ public class WorkListController {
 		List<String> itemTypeNames = workService.getAllItemTypeNames();
 		model.addAttribute("workItems", workResourceList);
 		model.addAttribute("itemTypeNames", itemTypeNames);
+		model.addAttribute("currentWorkMonth", workMonth);
 		return "/work/list";
 	}
 
