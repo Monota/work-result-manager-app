@@ -49,12 +49,14 @@ $(document).ready(function(){
 	});
 	var url = /*[[@{/work/monthlist}]]*/ '/work/monthlist';
 	$.get(url, function(data) {
-		$('.ui.dropdown').dropdown({
+		$('#monthSelector').dropdown({
 			placeholder: '月を選択',
 			values: data.values,
 			onChange: function(value, text, $selectedItem) {
-				if (text) {
-					// key : text, value : value
+				if (text && value) {
+					var urlOnChange = /*[[@{/work/list}]]*/ '/work/list';
+					urlOnChange = urlOnChange + '?month=' + value;
+					window.location.href = urlOnChange;
 				}
 			}
 		});
@@ -66,7 +68,7 @@ function showCreateModal() {
 	$('#editButton').hide();
 	$('#deleteButton').hide();
 	$('.ui.calendar').removeClass("disabled");
-	$('.ui.dropdown').removeClass("disabled");
+	$('#itemTypeName').removeClass("disabled");
 	$('.ui.toggle.checkbox').removeClass("disabled");
 	$('#itemIsNew').prop('disabled', false);
 	$('#itemUnitPrice').prop('readonly', true);
@@ -99,7 +101,7 @@ function showEditModal(row) {
 	$('#editButton').show();
 	$('#deleteButton').show();
 	$('.ui.calendar').addClass("disabled");
-	$('.ui.dropdown').addClass("disabled");
+	$('#itemTypeName').addClass("disabled");
 	$('.ui.toggle.checkbox').addClass("disabled");
 	$('#itemIsNew').prop('disabled', true);
 	$('#itemUnitPrice').prop('readonly', true);
@@ -185,7 +187,7 @@ function setTotalPrice() {
 					</button>
 				</div>
 				<div class="right floated column">
-					<div class="ui selection dropdown right-aligned">
+					<div class="ui selection dropdown right-aligned" id="monthSelector">
 						<div class="text"></div>
 						<i class="dropdown icon"></i>
 					</div>

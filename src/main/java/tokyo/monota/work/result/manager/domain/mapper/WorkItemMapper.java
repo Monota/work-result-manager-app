@@ -16,8 +16,8 @@ import tokyo.monota.work.result.manager.domain.entity.WorkItemEntity;
 @Mapper
 public interface WorkItemMapper {
 
-	@Select("SELECT * FROM work_item")
-	public List<WorkItemEntity> selectAllWorkItems();
+	@Select("SELECT * FROM work_item WHERE DATE_FORMAT(work_date, '%Y/%m') = #{workMonth}")
+	public List<WorkItemEntity> selectWorkItemsByWorkMonth(String workMonth);
 
 	@Select("SELECT DISTINCT DATE_FORMAT(work_date, '%Y/%m') FROM work_item ORDER BY 1")
 	public List<String> selectWorkMonths();

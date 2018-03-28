@@ -7,7 +7,7 @@ import tokyo.monota.work.result.manager.domain.resource.WorkResource;
 
 public interface WorkService {
 
-	public List<WorkResource> getAllWorkItem();
+	public List<WorkResource> getWorkItemByWorkMonth(String workMonth);
 
 	public MonthListResource getAllWorkMonths();
 

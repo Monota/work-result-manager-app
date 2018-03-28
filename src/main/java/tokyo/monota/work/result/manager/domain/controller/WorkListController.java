@@ -60,8 +60,18 @@ public class WorkListController {
 	}
 
 	@GetMapping("/list")
-	public String index(Model model) {
-		List<WorkResource> workResourceList = workService.getAllWorkItem();
+	public String list(Model model) throws Exception {
+		String currentMonth = new SimpleDateFormat("yyyy/MM/DD").format(new Date());
+		List<WorkResource> workResourceList = workService.getWorkItemByWorkMonth(currentMonth);
+		List<String> itemTypeNames = workService.getAllItemTypeNames();
+		model.addAttribute("workItems", workResourceList);
+		model.addAttribute("itemTypeNames", itemTypeNames);
+		return "/work/list";
+	}
+
+	@GetMapping(value = "/list", params = "month")
+	public String listByWorkMonth(@RequestParam("month") String workMonth, Model model) throws Exception  {
+		List<WorkResource> workResourceList = workService.getWorkItemByWorkMonth(workMonth);
 		List<String> itemTypeNames = workService.getAllItemTypeNames();
 		model.addAttribute("workItems", workResourceList);
 		model.addAttribute("itemTypeNames", itemTypeNames);

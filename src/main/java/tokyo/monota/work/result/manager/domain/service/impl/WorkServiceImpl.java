@@ -28,9 +28,9 @@ public class WorkServiceImpl implements WorkService {
 	ItemMasterMapper itemMasterMapper;
 
 	@Override
-	public List<WorkResource> getAllWorkItem() {
+	public List<WorkResource> getWorkItemByWorkMonth(String workMonth) {
 
-		List<WorkItemEntity> workItemEntityList = workItemMapper.selectAllWorkItems();
+		List<WorkItemEntity> workItemEntityList = workItemMapper.selectWorkItemsByWorkMonth(workMonth);
 
 		List<WorkResource> workResourceList = new ArrayList<>();
 		for (WorkItemEntity entity : workItemEntityList) {
