@@ -2,11 +2,14 @@ package tokyo.monota.work.result.manager.domain.service;
 
 import java.util.List;
 
+import tokyo.monota.work.result.manager.domain.resource.MonthListResource;
 import tokyo.monota.work.result.manager.domain.resource.WorkResource;
 
 public interface WorkService {
 
 	public List<WorkResource> getAllWorkItem();
+
+	public MonthListResource getAllWorkMonths();
 
 	public List<String> getAllItemTypeNames();
 

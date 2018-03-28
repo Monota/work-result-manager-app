@@ -13,6 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
 import tokyo.monota.work.result.manager.domain.entity.WorkItemEntity;
 import tokyo.monota.work.result.manager.domain.mapper.ItemMasterMapper;
 import tokyo.monota.work.result.manager.domain.mapper.WorkItemMapper;
+import tokyo.monota.work.result.manager.domain.resource.MonthListResource;
+import tokyo.monota.work.result.manager.domain.resource.MonthSelectionResource;
 import tokyo.monota.work.result.manager.domain.resource.WorkResource;
 import tokyo.monota.work.result.manager.domain.service.WorkService;
 
@@ -38,6 +40,19 @@ public class WorkServiceImpl implements WorkService {
 		}
 
 		return workResourceList;
+	}
+
+	@Override
+	public MonthListResource getAllWorkMonths() {
+
+		List<String> workMonthList = workItemMapper.selectWorkMonths();
+
+		MonthListResource monthList = new MonthListResource();
+		for (String workMonth : workMonthList) {
+			monthList.addValue(new MonthSelectionResource(workMonth, workMonth));
+		}
+
+		return monthList;
 	}
 
 	@Override

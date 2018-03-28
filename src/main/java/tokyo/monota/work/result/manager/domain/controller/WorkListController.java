@@ -20,7 +20,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import tokyo.monota.work.result.manager.domain.form.WorkItemForm;
 import tokyo.monota.work.result.manager.domain.resource.MonthListResource;
-import tokyo.monota.work.result.manager.domain.resource.MonthSelectionResource;
 import tokyo.monota.work.result.manager.domain.resource.WorkResource;
 import tokyo.monota.work.result.manager.domain.service.WorkService;
 
@@ -57,10 +56,7 @@ public class WorkListController {
 	@ResponseBody
 	@GetMapping("/monthlist")
 	public MonthListResource getMonthList() {
-		MonthListResource monthList = new MonthListResource();
-		monthList.addValue(new MonthSelectionResource("name1", "value1"));
-		monthList.addValue(new MonthSelectionResource("name2", "value2"));
-		return monthList;
+		return workService.getAllWorkMonths();
 	}
 
 	@GetMapping("/list")

@@ -19,16 +19,18 @@ public interface WorkItemMapper {
 	@Select("SELECT * FROM work_item")
 	public List<WorkItemEntity> selectAllWorkItems();
 
+	@Select("SELECT DISTINCT DATE_FORMAT(work_date, '%Y/%m') FROM work_item ORDER BY 1")
+	public List<String> selectWorkMonths();
+
+	@Select("SELECT SUM(item_unit_price * item_quantity) FROM work_item")
+	public BigDecimal sumupUnitPrice();
+
 	@Select("SELECT * FROM work_item WHERE user_id = #{userId} AND work_date = #{workDate} AND item_type_name = #{itemTypeName} AND item_is_new = #{itemIsNew} FOR UPDATE")
 	public WorkItemEntity selectByPkForUpdate(
 			@Param("userId") String userId,
 			@Param("workDate") Date workDate,
 			@Param("itemTypeName") String itemTypeName,
 			@Param("itemIsNew") Boolean itemIsNew);
-
-
-	@Select("SELECT SUM(item_unit_price * item_quantity) FROM work_item")
-	public BigDecimal sumupUnitPrice();
 
 	@Update("UPDATE work_item SET item_quantity = #{itemQuantity} WHERE user_id = #{userId} AND work_date = #{workDate} AND item_type_name = #{itemTypeName} AND item_is_new = #{itemIsNew}")
 	public int updateWorkItem(WorkItemEntity entity);
