@@ -145,7 +145,7 @@ function setItemUnitPrice() {
 }
 function setTotalPrice() {
 	var url = /*[[@{/work/item/totalprice}]]*/ '/work/item/totalprice';
-	$.get(url, function(data) {
+	$.get(url + '?month=' + currentWorkMonth, function(data) {
 		$('#totalPrice').text(data);
 	});
 }

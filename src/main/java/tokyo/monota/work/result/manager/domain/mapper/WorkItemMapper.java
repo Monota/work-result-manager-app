@@ -22,8 +22,8 @@ public interface WorkItemMapper {
 	@Select("SELECT DISTINCT DATE_FORMAT(work_date, '%Y/%m') FROM work_item ORDER BY 1")
 	public List<String> selectWorkMonths();
 
-	@Select("SELECT SUM(item_unit_price * item_quantity) FROM work_item")
-	public BigDecimal sumupUnitPrice();
+	@Select("SELECT SUM(item_unit_price * item_quantity) FROM work_item WHERE DATE_FORMAT(work_date, '%Y/%m') = #{workMonth}")
+	public BigDecimal sumupUnitPrice(String workMonth);
 
 	@Select("SELECT * FROM work_item WHERE user_id = #{userId} AND work_date = #{workDate} AND item_type_name = #{itemTypeName} AND item_is_new = #{itemIsNew} FOR UPDATE")
 	public WorkItemEntity selectByPkForUpdate(

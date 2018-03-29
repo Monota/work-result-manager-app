@@ -15,7 +15,7 @@ public interface WorkService {
 
 	public String getItemUnitPrice(String itemTypeName, Boolean itemIsNew);
 
-	public String getTotalPrice();
+	public String getTotalPrice(String currentWorkMonth);
 
 	public void updateWorkItem(WorkResource resource);
 

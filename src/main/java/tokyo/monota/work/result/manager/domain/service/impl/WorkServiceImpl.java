@@ -76,9 +76,9 @@ public class WorkServiceImpl implements WorkService {
 	}
 
 	@Override
-	public String getTotalPrice() {
+	public String getTotalPrice(String currentWorkMonth) {
 
-		BigDecimal totalPrice = workItemMapper.sumupUnitPrice();
+		BigDecimal totalPrice = workItemMapper.sumupUnitPrice(currentWorkMonth);
 
 		if (totalPrice == null) {
 			return "";
