@@ -7,6 +7,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -84,7 +85,7 @@ public class WorkListController {
 	@PostMapping(value = "/list/save", params = "mode=new")
 	public String create(@Valid WorkItemForm form, BindingResult bindingResult, RedirectAttributes redirectAttributes) throws Exception {
 		if (bindingResult.hasErrors()) {
-			redirectAttributes.addFlashAttribute("ErrorMessage", "There are input errors.");
+			redirectAttributes.addFlashAttribute("ErrorMessage", "入力エラーがあります。");
 			return "redirect:/work/list";
 		}
 
@@ -95,9 +96,14 @@ public class WorkListController {
 		resource.setItemIsNew(form.getItemIsNew());
 		resource.setItemUnitPrice(form.getItemUnitPrice());
 		resource.setItemQuantity(Integer.parseInt(form.getItemQuantity()));
-		workService.createWorkItem(resource);
+		try {
+			workService.createWorkItem(resource);
+		} catch(DuplicateKeyException e) {
+			redirectAttributes.addFlashAttribute("ErrorMessage", "同じ日付・種類・新品区分のデータがすでに登録されています。");
+			return "redirect:/work/list";
+		}
 
-		redirectAttributes.addFlashAttribute("Message", "Created.");
+		redirectAttributes.addFlashAttribute("Message", "追加しました。");
 
 		return "redirect:/work/list";
 	}
@@ -105,7 +111,7 @@ public class WorkListController {
 	@PostMapping(value = "/list/save", params = "mode=edit")
 	public String update(@Valid WorkItemForm form, BindingResult bindingResult, RedirectAttributes redirectAttributes) throws Exception {
 		if (bindingResult.hasErrors()) {
-			redirectAttributes.addFlashAttribute("ErrorMessage", "There are input errors.");
+			redirectAttributes.addFlashAttribute("ErrorMessage", "入力エラーがあります。");
 			return "redirect:/work/list";
 		}
 
@@ -118,7 +124,7 @@ public class WorkListController {
 		resource.setItemQuantity(Integer.parseInt(form.getItemQuantity()));
 		workService.updateWorkItem(resource);
 
-		redirectAttributes.addFlashAttribute("Message", "Updated.");
+		redirectAttributes.addFlashAttribute("Message", "更新しました。");
 
 		return "redirect:/work/list";
 	}
@@ -126,7 +132,7 @@ public class WorkListController {
 	@PostMapping(value = "/list/save", params = "mode=del")
 	public String delete(@Valid WorkItemForm form, BindingResult bindingResult, RedirectAttributes redirectAttributes) throws Exception {
 		if (bindingResult.hasErrors()) {
-			redirectAttributes.addFlashAttribute("ErrorMessage", "There are input errors.");
+			redirectAttributes.addFlashAttribute("ErrorMessage", "入力エラーがあります。");
 			return "redirect:/work/list";
 		}
 
@@ -139,7 +145,7 @@ public class WorkListController {
 		resource.setItemQuantity(Integer.parseInt(form.getItemQuantity()));
 		workService.deleteWorkItem(resource);
 
-		redirectAttributes.addFlashAttribute("Message", "Deleted.");
+		redirectAttributes.addFlashAttribute("Message", "削除しました。");
 
 		return "redirect:/work/list";
 	}

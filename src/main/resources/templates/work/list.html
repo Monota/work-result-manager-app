@@ -171,12 +171,10 @@ function setTotalPrice() {
 <body>
 	<div class="ui container">
 		<div class="row" th:if="${Message} != null">
-			<p class="ui positive message">完了しました。</p>
+			<p class="ui positive message" th:text="*{Message}">処理が完了しました。</p>
 		</div>
 		<div class="row" th:if="${ErrorMessage} != null">
-			<p class="ui error message">
-				入力エラーがあります。<br>画面から正しい値を入力してください。
-			</p>
+			<p class="ui error message" th:text="*{ErrorMessage}">入力エラーがあります。</p>
 		</div>
 	</div>
 	<div class="ui container">
