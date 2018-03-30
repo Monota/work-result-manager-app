@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -83,8 +83,8 @@ public class WorkListController {
 	}
 
 	@PostMapping(value = "/list/save", params = "mode=new")
-	public String create(@Valid WorkItemForm form, BindingResult bindingResult, RedirectAttributes redirectAttributes) throws Exception {
-		if (bindingResult.hasErrors()) {
+	public String create(@Valid WorkItemForm form, Errors errors, RedirectAttributes redirectAttributes) throws Exception {
+		if (errors.hasErrors()) {
 			redirectAttributes.addFlashAttribute("ErrorMessage", "入力エラーがあります。");
 			return "redirect:/work/list";
 		}
@@ -109,8 +109,8 @@ public class WorkListController {
 	}
 
 	@PostMapping(value = "/list/save", params = "mode=edit")
-	public String update(@Valid WorkItemForm form, BindingResult bindingResult, RedirectAttributes redirectAttributes) throws Exception {
-		if (bindingResult.hasErrors()) {
+	public String update(@Valid WorkItemForm form, Errors errors, RedirectAttributes redirectAttributes) throws Exception {
+		if (errors.hasErrors()) {
 			redirectAttributes.addFlashAttribute("ErrorMessage", "入力エラーがあります。");
 			return "redirect:/work/list";
 		}
@@ -130,8 +130,8 @@ public class WorkListController {
 	}
 
 	@PostMapping(value = "/list/save", params = "mode=del")
-	public String delete(@Valid WorkItemForm form, BindingResult bindingResult, RedirectAttributes redirectAttributes) throws Exception {
-		if (bindingResult.hasErrors()) {
+	public String delete(@Valid WorkItemForm form, Errors errors, RedirectAttributes redirectAttributes) throws Exception {
+		if (errors.hasErrors()) {
 			redirectAttributes.addFlashAttribute("ErrorMessage", "入力エラーがあります。");
 			return "redirect:/work/list";
 		}
