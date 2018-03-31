@@ -28,7 +28,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.and()
 				.formLogin().loginProcessingUrl("/common/login").loginPage("/common/login")
 				.usernameParameter("userId").passwordParameter("password")
-				.defaultSuccessUrl("/work/list");
+				.defaultSuccessUrl("/work/list")
+				.and()
+				.rememberMe();
 	}
 
 	@Override
