@@ -62,7 +62,7 @@ public class WorkServiceImpl implements WorkService {
 	public String getItemUnitPrice(String itemTypeName, Boolean itemIsNew) {
 		BigDecimal unitPrice = itemMasterMapper.selectUnitPrice(itemTypeName, itemIsNew);
 		if (unitPrice == null) {
-			return "";
+			return "0";
 		}
 		unitPrice = unitPrice.setScale(2, RoundingMode.FLOOR);
 		return unitPrice.toString();
@@ -72,7 +72,7 @@ public class WorkServiceImpl implements WorkService {
 	public String getTotalPrice(String currentWorkMonth) {
 		BigDecimal totalPrice = workItemMapper.sumupUnitPrice(currentWorkMonth);
 		if (totalPrice == null) {
-			return "";
+			return "0";
 		}
 		totalPrice = totalPrice.setScale(2, RoundingMode.FLOOR);
 		return totalPrice.toString();
