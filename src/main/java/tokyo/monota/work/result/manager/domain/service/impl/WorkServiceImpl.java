@@ -33,7 +33,8 @@ public class WorkServiceImpl implements WorkService {
 
 	@Override
 	public List<WorkResource> getWorkItemByWorkMonth(String currentWorkMonth) {
-		List<WorkItemEntity> workItemEntityList = workItemMapper.selectWorkItemsByWorkMonth(currentWorkMonth);
+		String userId = serviceUserHelper.getCurrentUserId();
+		List<WorkItemEntity> workItemEntityList = workItemMapper.selectWorkItemsByWorkMonth(userId, currentWorkMonth);
 		List<WorkResource> workResourceList = new ArrayList<>();
 		for (WorkItemEntity entity : workItemEntityList) {
 			WorkResource resource = new WorkResource();
@@ -45,7 +46,8 @@ public class WorkServiceImpl implements WorkService {
 
 	@Override
 	public MonthListResource getAllWorkMonths(String currentWorkMonth) {
-		List<String> workMonthList = workItemMapper.selectWorkMonths();
+		String userId = serviceUserHelper.getCurrentUserId();
+		List<String> workMonthList = workItemMapper.selectWorkMonths(userId);
 		MonthListResource monthList = new MonthListResource();
 		for (String workMonth : workMonthList) {
 			monthList.addValue(new MonthSelectionResource(workMonth, workMonth, workMonth.equals(currentWorkMonth)));
@@ -70,7 +72,8 @@ public class WorkServiceImpl implements WorkService {
 
 	@Override
 	public String getTotalPrice(String currentWorkMonth) {
-		BigDecimal totalPrice = workItemMapper.sumupUnitPrice(currentWorkMonth);
+		String userId = serviceUserHelper.getCurrentUserId();
+		BigDecimal totalPrice = workItemMapper.sumupUnitPrice(userId, currentWorkMonth);
 		if (totalPrice == null) {
 			return "0";
 		}
