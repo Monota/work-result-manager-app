@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import tokyo.monota.work.result.manager.domain.form.LoginForm;
 
 @Controller
-@RequestMapping("/common/login")
+@RequestMapping("common/login")
 public class LoginController {
 
 	@ModelAttribute

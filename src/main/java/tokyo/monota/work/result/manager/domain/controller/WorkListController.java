@@ -25,7 +25,7 @@ import tokyo.monota.work.result.manager.domain.resource.WorkResource;
 import tokyo.monota.work.result.manager.domain.service.WorkService;
 
 @Controller
-@RequestMapping("/work")
+@RequestMapping("work")
 public class WorkListController {
 
 	@Autowired
@@ -79,7 +79,7 @@ public class WorkListController {
 		model.addAttribute("workItems", workResourceList);
 		model.addAttribute("itemTypeNames", itemTypeNames);
 		model.addAttribute("currentWorkMonth", currentMonth);
-		return "/work/list";
+		return "work/list";
 	}
 
 	@PostMapping(value = "/list/save", params = "mode=new")
