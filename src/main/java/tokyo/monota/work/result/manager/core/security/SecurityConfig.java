@@ -9,6 +9,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.social.security.SpringSocialConfigurer;
 
 @Configuration
 @EnableWebSecurity
@@ -22,7 +23,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.authorizeRequests()
-				.antMatchers("/common/**").permitAll()
+				.antMatchers("/common/**", "/auth/**").permitAll()
 				.antMatchers("/work/**").hasAnyAuthority("user")
 				.anyRequest().authenticated()
 				.and()
@@ -30,7 +31,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.usernameParameter("userId").passwordParameter("password")
 				.defaultSuccessUrl("/work/list", true)
 				.and()
-				.rememberMe();
+				.rememberMe()
+				.and()
+				.apply(new SpringSocialConfigurer()).postLoginUrl("/work/list");
 	}
 
 	@Override

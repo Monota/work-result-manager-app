@@ -1,6 +1,6 @@
 create table if not exists service_user (
     user_id varchar(32) primary key,
-    password varchar(256) not null
+    password varchar(256)
 );
 
 create table if not exists work_item (

@@ -24,6 +24,10 @@ public class AuthenticationService implements UserDetailsService {
 			throw new UsernameNotFoundException("User " + username + " is not found.");
 		}
 
+		if (serviceUserEntity.getPassword() == null) {
+			throw new UsernameNotFoundException("User " + username + " cannot authenticate by password.");
+		}
+
 		User user = new User(
 				serviceUserEntity.getUserId(),
 				serviceUserEntity.getPassword(),
