@@ -2,7 +2,9 @@ package tokyo.monota.work.result.manager.domain.service.impl;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.BeanUtils;
@@ -101,6 +103,9 @@ public class WorkServiceImpl implements WorkService {
 
 	@Override
 	public void createWorkItem(WorkResource resource) {
+		if (isExceedMonthlyLimit()) {
+			throw new IllegalStateException("Monthly limit exceeded.");
+		}
 		String userId = serviceUserHelper.getCurrentUserId();
 		WorkItemEntity entity = new WorkItemEntity();
 		entity.setUserId(userId);
@@ -110,5 +115,11 @@ public class WorkServiceImpl implements WorkService {
 		entity.setItemUnitPrice(resource.getItemUnitPrice());
 		entity.setItemQuantity(resource.getItemQuantity());
 		workItemMapper.insertWorkItem(entity);
+	}
+
+	boolean isExceedMonthlyLimit() {
+		String userId = serviceUserHelper.getCurrentUserId();
+		String currentMonth = new SimpleDateFormat("yyyy/MM").format(new Date());
+		return workItemMapper.countWorkItemMonthly(userId, currentMonth) >= 100;
 	}
 }
