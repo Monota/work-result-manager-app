@@ -40,8 +40,14 @@
 							<label for="rememberMe" style="cursor:pointer;">一定期間ログインしたままにする</label>
 						</div>
 					</div>
-					<input type="submit" class="ui fluid large teal submit button" value="ログイン" />
-					<p><a th:href="@{/auth/google}">Google</a></p>
+					<input type="submit" class="ui fluid teal submit button" value="IDとパスワードでログイン" />
+					<div class="ui horizontal divider">
+						または
+					</div>
+					<a class="ui fluid teal labeled icon button" th:href="@{/auth/google}">
+						Google アカウントでログイン
+						<i class="google icon"></i>
+					</a>
 				</div>
 			</form>
 		</div>
