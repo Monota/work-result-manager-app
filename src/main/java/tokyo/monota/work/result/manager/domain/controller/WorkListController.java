@@ -89,6 +89,16 @@ public class WorkListController {
 			return "redirect:/work/list";
 		}
 
+		if (workService.isExceedMonthlyLimit()) {
+			redirectAttributes.addFlashAttribute("ErrorMessage", "月あたりの上限数を超過しました。");
+			return "redirect:/work/list";
+		}
+
+		if (workService.isExceedTotalLimit()) {
+			redirectAttributes.addFlashAttribute("ErrorMessage", "1ユーザーあたりの作成可能な合計数を超過しました。");
+			return "redirect:/work/list";
+		}
+
 		WorkResource resource = new WorkResource();
 		Date workDate = new SimpleDateFormat("yyyy-MM-dd").parse(form.getWorkDate());
 		resource.setWorkDate(workDate);

@@ -103,9 +103,6 @@ public class WorkServiceImpl implements WorkService {
 
 	@Override
 	public void createWorkItem(WorkResource resource) {
-		if (isExceedMonthlyLimit()) {
-			throw new IllegalStateException("Monthly limit exceeded.");
-		}
 		String userId = serviceUserHelper.getCurrentUserId();
 		WorkItemEntity entity = new WorkItemEntity();
 		entity.setUserId(userId);
@@ -117,9 +114,16 @@ public class WorkServiceImpl implements WorkService {
 		workItemMapper.insertWorkItem(entity);
 	}
 
-	boolean isExceedMonthlyLimit() {
+	@Override
+	public boolean isExceedMonthlyLimit() {
 		String userId = serviceUserHelper.getCurrentUserId();
 		String currentMonth = new SimpleDateFormat("yyyy/MM").format(new Date());
 		return workItemMapper.countWorkItemMonthly(userId, currentMonth) >= 100;
+	}
+
+	@Override
+	public boolean isExceedTotalLimit() {
+		String userId = serviceUserHelper.getCurrentUserId();
+		return workItemMapper.countWorkItemTotal(userId) >= 10000;
 	}
 }
