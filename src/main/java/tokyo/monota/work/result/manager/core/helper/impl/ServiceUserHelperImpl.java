@@ -8,9 +8,11 @@ import org.springframework.social.security.SocialAuthenticationToken;
 import org.springframework.social.security.SocialUser;
 import org.springframework.stereotype.Component;
 
+import lombok.extern.slf4j.Slf4j;
 import tokyo.monota.work.result.manager.core.exception.UserNotLoggedinException;
 import tokyo.monota.work.result.manager.core.helper.ServiceUserHelper;
 
+@Slf4j
 @Component
 public class ServiceUserHelperImpl implements ServiceUserHelper {
 
@@ -27,6 +29,7 @@ public class ServiceUserHelperImpl implements ServiceUserHelper {
 				return ((SocialUser) (authentication.getPrincipal())).getUsername();
 			}
 		}
+		log.info("Session time out: " + (authentication != null ? authentication.getName() : ""));
 		throw new UserNotLoggedinException();
 	}
 }

@@ -66,11 +66,8 @@ public class SocialWebAutoConfiguration {
 
 		@Bean
 		@ConditionalOnMissingBean(ConnectController.class)
-		public ConnectController connectController(
-				ConnectionFactoryLocator factoryLocator,
-				ConnectionRepository repository) {
-			ConnectController controller = new ConnectController(factoryLocator,
-					repository);
+		public ConnectController connectController(ConnectionFactoryLocator factoryLocator, ConnectionRepository repository) {
+			ConnectController controller = new ConnectController(factoryLocator, repository);
 			if (!CollectionUtils.isEmpty(this.connectInterceptors)) {
 				controller.setConnectInterceptors(this.connectInterceptors);
 			}
@@ -92,11 +89,8 @@ public class SocialWebAutoConfiguration {
 		@Bean
 		@ConditionalOnBean(SignInAdapter.class)
 		@ConditionalOnMissingBean
-		public ProviderSignInController signInController(
-				ConnectionFactoryLocator factoryLocator,
-				UsersConnectionRepository usersRepository, SignInAdapter signInAdapter) {
-			ProviderSignInController controller = new ProviderSignInController(
-					factoryLocator, usersRepository, signInAdapter);
+		public ProviderSignInController signInController(ConnectionFactoryLocator factoryLocator, UsersConnectionRepository usersRepository, SignInAdapter signInAdapter) {
+			ProviderSignInController controller = new ProviderSignInController(factoryLocator, usersRepository, signInAdapter);
 			if (!CollectionUtils.isEmpty(this.signInInterceptors)) {
 				controller.setSignInInterceptors(this.signInInterceptors);
 			}
@@ -110,7 +104,6 @@ public class SocialWebAutoConfiguration {
 	@ConditionalOnWebApplication
 	@ConditionalOnMissingClass("org.springframework.security.core.context.SecurityContextHolder")
 	protected static class AnonymousUserIdSourceConfig extends SocialConfigurerAdapter {
-
 		@Override
 		public UserIdSource getUserIdSource() {
 			return new UserIdSource() {
@@ -127,39 +120,30 @@ public class SocialWebAutoConfiguration {
 	@EnableSocial
 	@ConditionalOnWebApplication
 	@ConditionalOnClass(SecurityContextHolder.class)
-	protected static class AuthenticationUserIdSourceConfig
-			extends SocialConfigurerAdapter {
-
+	protected static class AuthenticationUserIdSourceConfig extends SocialConfigurerAdapter {
 		@Override
 		public UserIdSource getUserIdSource() {
 			return new SecurityContextUserIdSource();
 		}
-
 	}
 
 	@Configuration
 //	@ConditionalOnClass(SpringResourceResourceResolver.class)
 	protected static class SpringSocialThymeleafConfig {
-
 		@Bean
 		@ConditionalOnMissingBean
 		public SpringSocialDialect springSocialDialect() {
 			return new SpringSocialDialect();
 		}
-
 	}
 
 	private static class SecurityContextUserIdSource implements UserIdSource {
-
 		@Override
 		public String getUserId() {
 			SecurityContext context = SecurityContextHolder.getContext();
 			Authentication authentication = context.getAuthentication();
-			Assert.state(authentication != null,
-					"Unable to get a " + "ConnectionRepository: no user signed in");
+			Assert.state(authentication != null, "Unable to get a " + "ConnectionRepository: no user signed in");
 			return authentication.getName();
 		}
-
 	}
-
 }

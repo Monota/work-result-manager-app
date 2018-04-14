@@ -58,11 +58,9 @@ public class GoogleAutoConfigurationLocal {
 		}
 
 		@Override
-		public void addConnectionFactories(final ConnectionFactoryConfigurer configurer,
-				final Environment environment) {
-			final GoogleConnectionFactory factory = new GoogleConnectionFactory(this.properties.getAppId(),
-					this.properties.getAppSecret());
-			factory.setScope("email profile");
+		public void addConnectionFactories(final ConnectionFactoryConfigurer configurer, final Environment environment) {
+			final GoogleConnectionFactory factory = new GoogleConnectionFactory(this.properties.getAppId(), this.properties.getAppSecret());
+			factory.setScope("email");
 			configurer.addConnectionFactory(factory);
 		}
 
