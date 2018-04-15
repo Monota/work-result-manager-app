@@ -22,7 +22,6 @@ import org.springframework.social.connect.ConnectionFactoryLocator;
 import org.springframework.social.connect.ConnectionRepository;
 import org.springframework.social.connect.UsersConnectionRepository;
 import org.springframework.social.connect.mem.InMemoryUsersConnectionRepository;
-import org.springframework.social.connect.web.GenericConnectionStatusView;
 import org.springframework.social.google.api.Google;
 import org.springframework.social.google.config.boot.GoogleProperties;
 import org.springframework.social.google.connect.GoogleConnectionFactory;
@@ -49,12 +48,6 @@ public class GoogleAutoConfigurationLocal {
 		public Google google(final ConnectionRepository repository) {
 			final Connection<Google> connection = repository.findPrimaryConnection(Google.class);
 			return connection != null ? connection.getApi() : null;
-		}
-
-		@Bean(name = { "connect/googleConnect", "connect/googleConnected" })
-		@ConditionalOnProperty(prefix = "spring.social", name = "auto-connection-views")
-		public GenericConnectionStatusView googleConnectView() {
-			return new GenericConnectionStatusView("google", "Google");
 		}
 
 		@Override

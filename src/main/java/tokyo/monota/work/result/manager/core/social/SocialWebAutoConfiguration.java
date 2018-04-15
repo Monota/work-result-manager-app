@@ -8,7 +8,6 @@ import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.boot.autoconfigure.thymeleaf.ThymeleafAutoConfiguration;
@@ -102,23 +101,6 @@ public class SocialWebAutoConfiguration {
 	@Configuration
 	@EnableSocial
 	@ConditionalOnWebApplication
-	@ConditionalOnMissingClass("org.springframework.security.core.context.SecurityContextHolder")
-	protected static class AnonymousUserIdSourceConfig extends SocialConfigurerAdapter {
-		@Override
-		public UserIdSource getUserIdSource() {
-			return new UserIdSource() {
-				@Override
-				public String getUserId() {
-					return "anonymous";
-				}
-			};
-		}
-
-	}
-
-	@Configuration
-	@EnableSocial
-	@ConditionalOnWebApplication
 	@ConditionalOnClass(SecurityContextHolder.class)
 	protected static class AuthenticationUserIdSourceConfig extends SocialConfigurerAdapter {
 		@Override
@@ -128,7 +110,6 @@ public class SocialWebAutoConfiguration {
 	}
 
 	@Configuration
-//	@ConditionalOnClass(SpringResourceResourceResolver.class)
 	protected static class SpringSocialThymeleafConfig {
 		@Bean
 		@ConditionalOnMissingBean

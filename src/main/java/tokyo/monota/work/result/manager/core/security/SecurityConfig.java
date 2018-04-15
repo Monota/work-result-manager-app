@@ -1,5 +1,6 @@
 package tokyo.monota.work.result.manager.core.security;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -11,9 +12,14 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.social.security.SpringSocialConfigurer;
 
+import tokyo.monota.work.result.manager.core.config.ManagerConfig;
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+	@Autowired
+	ManagerConfig managerConfig;
 
 	@Override
 	public void configure(WebSecurity web) throws Exception {
@@ -33,7 +39,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.and()
 				.rememberMe()
 				.and()
-				.apply(new SpringSocialConfigurer()).postLoginUrl("/work/list")
+				.apply(new SpringSocialConfigurer()).postLoginUrl("/work/list").signupUrl(managerConfig.getSignup())
 				.and()
 				.sessionManagement().invalidSessionUrl("/common/login");
 	}
