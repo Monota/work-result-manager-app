@@ -1,5 +1,6 @@
 package tokyo.monota.work.result.manager.core.security;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -9,10 +10,16 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.social.security.SpringSocialConfigurer;
+
+import tokyo.monota.work.result.manager.core.config.ManagerConfig;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+	@Autowired
+	ManagerConfig managerConfig;
 
 	@Override
 	public void configure(WebSecurity web) throws Exception {
@@ -22,7 +29,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.authorizeRequests()
-				.antMatchers("/common/**").permitAll()
+				.antMatchers("/common/**", "/auth/**").permitAll()
 				.antMatchers("/work/**").hasAnyAuthority("user")
 				.anyRequest().authenticated()
 				.and()
@@ -30,7 +37,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.usernameParameter("userId").passwordParameter("password")
 				.defaultSuccessUrl("/work/list", true)
 				.and()
-				.rememberMe();
+				.rememberMe()
+				.and()
+				.apply(new SpringSocialConfigurer()).postLoginUrl("/work/list").signupUrl(managerConfig.getSignup())
+				.and()
+				.sessionManagement().invalidSessionUrl("/common/login");
 	}
 
 	@Override

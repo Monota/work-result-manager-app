@@ -22,4 +22,8 @@ public interface WorkService {
 	public void deleteWorkItem(WorkResource resource);
 
 	public void createWorkItem(WorkResource resource);
+
+	public boolean isExceedMonthlyLimit();
+
+	public boolean isExceedTotalLimit();
 }

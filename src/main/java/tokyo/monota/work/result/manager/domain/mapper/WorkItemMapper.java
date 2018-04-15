@@ -19,6 +19,12 @@ public interface WorkItemMapper {
 	@Select("SELECT * FROM work_item WHERE user_id = #{userId} AND DATE_FORMAT(work_date, '%Y/%m') = #{workMonth}")
 	public List<WorkItemEntity> selectWorkItemsByWorkMonth(@Param("userId") String userId, @Param("workMonth") String workMonth);
 
+	@Select("SELECT count(*) FROM work_item WHERE user_id = #{userId} AND DATE_FORMAT(work_date, '%Y/%m') = #{workMonth}")
+	public int countWorkItemMonthly(@Param("userId") String userId, @Param("workMonth") String workMonth);
+
+	@Select("SELECT count(*) FROM work_item WHERE user_id = #{userId}")
+	public int countWorkItemTotal(@Param("userId") String userId);
+
 	@Select("SELECT DISTINCT DATE_FORMAT(work_date, '%Y/%m') FROM work_item WHERE user_id = #{userId} ORDER BY 1")
 	public List<String> selectWorkMonths(@Param("userId") String userId);
 
